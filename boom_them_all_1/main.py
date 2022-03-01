@@ -41,10 +41,6 @@ class Bomb(pygame.sprite.Sprite):
         self.rect.x = random.randrange(0, width - Bomb.bwidth)
         self.rect.y = random.randrange(0, height - Bomb.bheight)
 
-    def make_bomb(self):
-        self.rect = self.rect.move(random.randrange(3) - 1,
-                                   random.randrange(3) - 1)
-
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
                 self.rect.collidepoint(args[0].pos):
