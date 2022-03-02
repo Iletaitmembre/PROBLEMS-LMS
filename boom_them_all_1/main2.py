@@ -4,7 +4,7 @@ import sys
 from PIL import Image
 import pygame
 
-size = width, height = 500, 500
+size = width, height = 1000, 1000
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Boom them all 2')
 all_sprites = pygame.sprite.Group()
@@ -35,23 +35,23 @@ class Bomb(pygame.sprite.Sprite):
     bwidth, bheight = Image.open("data/boom.png").size
 
     def __init__(self, group):
-        super().__init__(group)
         self.image = Bomb.bomb
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        while True:
-            self.rect.x = random.randint(0, width - Bomb.bwidth)
-            self.rect.y = random.randint(0, height - Bomb.bheight)
-            for sp in all_sprites:
-                if pygame.sprite.collide_mask(self, sp) and not (sp == self):
-                    break
-            else:
-                break
+        self.place_a_bomb()
+        super().__init__(group)
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
                 self.rect.collidepoint(args[0].pos):
             self.image = self.boom
+
+    def place_a_bomb(self):
+        while True:
+            self.rect.x = random.randint(0, width - Bomb.bwidth)
+            self.rect.y = random.randint(0, height - Bomb.bheight)
+            if not pygame.sprite.spritecollideany(self, all_sprites):
+                break
 
 
 def terminate():
@@ -62,7 +62,7 @@ def terminate():
     sys.exit()
 
 
-for i in range(10):
+for i in range(50):
     Bomb(all_sprites)
 while True:
     for event in pygame.event.get():
